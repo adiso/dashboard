@@ -1,0 +1,121 @@
+@model DapperDashboard.ViewModels.InvoiceListViewModel
+@{
+    ViewBag.Title = "All Invoices";
+}
+
+@helper GetInvoiceStatusClass(string status)
+{
+    switch (status)
+    {
+        case "Paid":
+            <text>bg-green-100 text-green-800</text>
+            break;
+        case "Overdue":
+            <text>bg-red-100 text-red-800</text>
+            break;
+        case "Draft":
+            <text>bg-gray-100 text-gray-800</text>
+            break;
+        default:
+            <text>bg-yellow-100 text-yellow-800</text>
+            break;
+    }
+}
+
+<div class="max-w-7xl mx-auto p-4 md:p-10">
+
+    <div class="mb-6 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">All Invoices</h1>
+            @Html.ActionLink("Back to Dashboard", "Index", "Home", null, new { @class = "text-sm text-blue-600 hover:text-blue-800 font-medium" })
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left">Invoice ID</th>
+                        <th scope="col" class="px-6 py-3 text-left">Issue Date</th>
+                        <th scope="col" class="px-6 py-3 text-left">Due Date</th>
+                        <th scope="col" class="px-6 py-3 text-right">Amount</th>
+                        <th scope="col" class="px-6 py-3 text-center">Status</th>
+                        <th scope="col" class="px-6 py-3 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @foreach (var invoice in Model.Invoices)
+                    {
+                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="font-medium text-gray-900">@invoice.InvoiceReference</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                @invoice.IssueDate.ToString("MMM dd, yyyy")
+                            </td>
+                            <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                @invoice.DueDate.ToString("MMM dd, yyyy")
+                            </td>
+                            <td class="px-6 py-4 text-gray-800 whitespace-nowrap text-right">
+                                @invoice.Amount.ToString("C")
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <span classclass="px-3 py-1 text-xs font-semibold rounded-full @GetInvoiceStatusClass(invoice.Status)">
+                                    @invoice.Status
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="@Url.Action("Details", "Invoice", new { @ref = invoice.InvoiceReference })"
+                                   class="font-medium text-blue-600 hover:text-blue-800">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <nav class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6" aria-label="Pagination">
+            <div class="hidden sm:block">
+                <p class="text-sm text-gray-700">
+                    Showing
+                    <span class="font-medium">@(((Model.Pagination.CurrentPage - 1) * Model.Pagination.PageSize) + 1)</span>
+                    to
+                    <span class="font-medium">@(Model.Pagination.CurrentPage * Model.Pagination.PageSize > Model.Pagination.TotalItems ? Model.Pagination.TotalItems : Model.Pagination.CurrentPage * Model.Pagination.PageSize)</span>
+                    of
+                    <span class="font-medium">@Model.Pagination.TotalItems</span>
+                    results
+                </p>
+            </div>
+            <div class="flex flex-1 justify-between sm:justify-end">
+                @if (Model.Pagination.HasPreviousPage)
+                {
+                    <a href="@Url.Action("Index", new { page = Model.Pagination.CurrentPage - 1 })" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        Previous
+                    </a>
+                }
+                else
+                {
+                    <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">
+                        Previous
+                    </span>
+                }
+
+                @if (Model.Pagination.HasNextPage)
+                {
+                    <a href="@Url.Action("Index", new { page = Model.Pagination.CurrentPage + 1 })" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        Next
+                    </a>
+                }
+                else
+                {
+                    <span class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">
+                        Next
+                    </span>
+                }
+            </div>
+        </nav>
+    </div>
+</div>

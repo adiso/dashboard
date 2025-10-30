@@ -1,0 +1,289 @@
+@model DapperDashboard.ViewModels.DashboardViewModel
+@{
+    ViewBag.Title = "Customer Dashboard";
+}
+
+@helper GetOrderStatusClass(string status)
+{
+    switch (status)
+    {
+        case "Processing":
+            <text>bg-yellow-100 text-yellow-800</text>
+            break;
+        case "Shipped":
+            <text>bg-blue-100 text-blue-800</text>
+            break;
+        case "Delivered":
+            <text>bg-green-100 text-green-800</text>
+            break;
+        default:
+            <text>bg-gray-100 text-gray-800</text>
+            break;
+    }
+}
+
+@helper GetInvoiceStatusClass(string status)
+{
+    switch (status)
+    {
+        case "Paid":
+            <text>bg-green-100 text-green-800</text>
+            break;
+        case "Overdue":
+            <text>bg-red-100 text-red-800</text>
+            break;
+        case "Draft":
+            <text>bg-gray-100 text-gray-800</text>
+            break;
+        default:
+            <text>bg-yellow-100 text-yellow-800</text>
+            break;
+    }
+}
+
+<main class="flex-1 p-6 md:p-10">
+
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Customer Dashboard</h1>
+        <p class="text-gray-600 mt-1">Welcome back, <strong>@ViewBag.CustomerName</strong></p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase">Sales (YTD)</p>
+                    <p class="text-3xl font-bold text-gray-900">@Model.Kpis.SalesYtd.ToString("C")</p>
+                </div>
+                <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.75C2.25 5.25 2.25 5.25 2.25 5.25h.75M3.75 6v.75A.75.75 0 004.5 7.5h.75m0 0v-.75A.75.75 0 004.5 6h-.75M6 12m0 .75h.75a.75.75 0 00.75-.75V12a.75.75 0 00-.75-.75H6a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75zM6 6m0 .75h.75a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75H6A.75.75 0 005.25 6v.75c0 .414.336.75.75.75zM6 18m0 .75h.75a.75.75 0 00.75-.75v-.75a.75.75 0 00-.75-.75H6a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75zM9.75 12m0 .75h.75a.75.75 0 00.75-.75V12a.75.75 0 00-.75-.75H9.75a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75zM9.75 6m0 .75h.75a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75H9.75a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75zM9.75 18m0 .75h.75a.75.75 0 00.75-.75v-.75a.75.75 0 00-.75-.75H9.75a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75zM13.5 12m0 .75h.75a.75.75 0 00.75-.75V12a.75.75 0 00-.75-.75h-.75a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75zM13.5 6m0 .75h.75a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75h-.75a.75.75 0 00-.75.75v.75c0 .414.336.75.75.75z" /></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase">Current Orders</p>
+                    <p class="text-3xl font-bold text-gray-900">@Model.Kpis.CurrentOrders</p>
+                </div>
+                <div class="bg-yellow-100 text-yellow-600 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.22-.1.447-.1.682 0 .414.336.75.75.75h3.15l-1.38 4.14a.75.75 0 001.38.46l1.108-3.326.217-.652c.093-.28.14-.574.14-.874 0-1.036-.84-1.875-1.875-1.875H11.35zM12 11.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0v-3.75a.75.75 0 01.75-.75zM12 18.75a.375.375 0 110-.75.375.375 0 010 .75zM4.125 3.75c-1.036 0-1.875.84-1.875 1.875v12.75c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V5.625c0-1.036-.84-1.875-1.875-1.875H4.125z" /></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase">Open Invoices</p>
+                    <p class="text-3xl font-bold text-gray-900">@Model.Kpis.OpenInvoices</p>
+                </div>
+                <div class="bg-green-100 text-green-600 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase">Key Contacts</p>
+                    <p class="text-3xl font-bold text-gray-900">@Model.Kpis.KeyContacts</p>
+                </div>
+                <div class="bg-purple-100 text-purple-600 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+        <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Sales Volume (Last 12 Months)</h2>
+            <div class="relative h-96">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Top Products</h2>
+            <div class="space-y-4">
+
+                @foreach (var product in Model.TopProducts)
+                {
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-medium text-gray-800">@product.ProductName</p>
+                            <p class="text-sm text-gray-500">SKU: @product.SKU</p>
+                        </div>
+                        <p class="font-semibold text-gray-900">@product.UnitsSold units</p>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+        <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Current Orders</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="text-xs text-gray-500 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="py-3 px-4">Order ID</th>
+                            <th scope="col" class="py-3 px-4">Date</th>
+                            <th scope="col" class="py-3 px-4">Total</th>
+                            <th scope="col" class="py-3 px-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+
+                        @foreach (var order in Model.CurrentOrders)
+                        {
+                            <tr>
+                                <td class="py-3 px-4 font-medium text-gray-900">@order.OrderReference</td>
+                                <td class="py-3 px-4 text-gray-600">@order.OrderDate.ToString("MMM dd, yyyy")</td>
+                                <td class="py-3 px-4 text-gray-600">@order.TotalAmount.ToString("C")</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-3 py-1 text-xs font-medium rounded-full @GetOrderStatusClass(order.Status)">
+                                        @order.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Key Contacts</h2>
+            <div class="space-y-5">
+
+                @foreach (var contact in Model.KeyContacts)
+                {
+                    <div class="flex items-center space-x-4">
+                        <img class="h-10 w-10 rounded-full" src="@contact.AvatarUrl" alt="@contact.ContactName">
+                        <div>
+                            <p class="font-medium text-gray-900">@contact.ContactName</p>
+                            <p class="text-sm text-gray-500">@contact.Title</p>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">Recent Invoices</h2>
+            @Html.ActionLink("View All", "Index", "Invoice", null, new { @class = "text-sm font-medium text-blue-600 hover:text-blue-800" })
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="text-xs text-gray-500 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="py-3 px-4">Invoice ID</th>
+                        <th scope="col" class="py-3 px-4">Issue Date</th>
+                        <th scope="col" class="py-3 px-4">Due Date</th>
+                        <th scope="col" class="py-3 px-4">Amount</th>
+                        <th scope="col" class="py-3 px-4">Status</th>
+                        <th scope="col" class="py-3 px-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+
+                    @foreach (var invoice in Model.RecentInvoices)
+                    {
+                        <tr>
+                            <td class="py-3 px-4 font-medium text-gray-900">@invoice.InvoiceReference</td>
+                            <td class="py-3 px-4 text-gray-600">@invoice.IssueDate.ToString("MMM dd, yyyy")</td>
+                            <td class="py-3 px-4 text-gray-600">@invoice.DueDate.ToString("MMM dd, yyyy")</td>
+                            <td class="py-3 px-4 text-gray-600">@invoice.Amount.ToString("C")</td>
+                            <td class="py-3 px-4">
+                                <span class="px-3 py-1 text-xs font-medium rounded-full @GetInvoiceStatusClass(invoice.Status)">
+                                    @invoice.Status
+                                </span>
+                            </td>
+                            <td class="py-3 px-4">
+                                <a href="@Url.Action("Details", "Invoice", new { @ref = invoice.InvoiceReference })" class="font-medium text-blue-600 hover:text-blue-800">View</a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+
+            // 3. Get data from the C# Model
+            const chartLabels = @Html.Raw(Json.Encode(Model.SalesChart.Labels));
+            const chartData = @Html.Raw(Json.Encode(Model.SalesChart.DataPoints));
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Sales Volume',
+                        data: chartData,
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                // Format Y-axis labels as currency
+                                callback: function (value, index, values) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                // Format tooltip as currency
+                                label: function (context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

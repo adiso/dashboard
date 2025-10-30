@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Customer Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        @Html.ActionLink("Customer Portal", "Index", "Home", new { area = "" }, new { @class = "text-xl font-bold text-gray-900" })
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span class="text-gray-700 mr-4">Hello, @User.Identity.Name!</span>
+                        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a href="javascript:document.getElementById('logoutForm').submit()" class="font-medium text-blue-600 hover:text-blue-800">Log off</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mx-auto">
+        @RenderBody()
+    </div>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

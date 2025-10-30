@@ -1,0 +1,123 @@
+@model DapperDashboard.ViewModels.InvoiceDetailViewModel
+@{
+    ViewBag.Title = $"Invoice {Model.InvoiceReference}";
+}
+
+@helper GetInvoiceStatusBadge(string status)
+{
+    string baseClasses = "text-xs font-semibold px-3 py-1 rounded-full inline-block";
+    switch (status)
+    {
+        case "Paid":
+            <span class="@baseClasses bg-green-100 text-green-700">Paid</span>
+            break;
+        case "Overdue":
+            <span class="@baseClasses bg-red-100 text-red-700">Overdue</span>
+            break;
+        case "Draft":
+            <span class="@baseClasses bg-gray-100 text-gray-700">Draft</span>
+            break;
+        default:
+            <span class="@baseClasses bg-yellow-100 text-yellow-700">Open</span>
+            break;
+    }
+}
+
+<div class="max-w-5xl mx-auto p-4 md:p-10">
+
+    <div class="mb-6 flex justify-between items-center">
+        @Html.ActionLink("Back to All Invoices", "Index", "Invoice", null, new { @class = "text-sm text-blue-600 hover:text-blue-800 font-medium" })
+
+        <div class="flex space-x-2">
+            <button onclick="window.print()" class="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a41.455 41.455 0 0111.358 0M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096A41.455 41.455 0 0111.358 0M6.72 13.829c-.24.03-.48.062-.72.096m11.358 0c.24-.03.48-.062.72-.096m-.72.096a41.455 41.455 0 00-11.358 0m11.358 0c.24-.03.48-.062.72-.096m.72.096A41.455 41.455 0 006.72 13.829m11.358 0c.24-.03.48-.062.72-.096M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a41.455 41.455 0 0111.358 0m0 0c.24-.03.48-.062.72-.096m.72.096A41.455 41.455 0 006.72 13.829" /></svg>
+                <span>Print</span>
+            </button>
+            <button class="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                <span>Download PDF</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
+
+        <div class="grid grid-cols-2 items-start mb-10">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">INVOICE</h1>
+                <p class="text-gray-500 text-lg">@Model.InvoiceReference</p>
+                <div class="mt-2">
+                    @GetInvoiceStatusBadge(Model.Status)
+                </div>
+            </div>
+            <div class="text-right">
+                <h2 class="text-xl font-semibold text-gray-800">@Model.OurCompanyName</h2>
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    @Html.Raw(Model.OurAddress.Replace("<br>", "<br/>"))
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div>
+                <p class="font-semibold text-gray-500 uppercase text-sm mb-2">Bill To</p>
+                <h3 class="font-semibold text-gray-800 text-lg">@Model.CustomerName</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    @Html.Raw(Model.CustomerAddress.Replace("<br>", "<br/>"))
+                </p>
+            </div>
+            <div class="md:text-right space-y-3">
+                <div class="grid grid-cols-2 md:grid-cols-1">
+                    <p class="font-semibold text-gray-500 uppercase text-sm">Issue Date</p>
+                    <p class="font-medium text-gray-800">@Model.IssueDate.ToString("MMMM dd, yyyy")</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-1">
+                    <p class="font-semibold text-gray-500 uppercase text-sm">Due Date</p>
+                    <p class="font-medium text-gray-800">@Model.DueDate.ToString("MMMM dd, yyyy")</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto mb-10">
+            <table class="w-full text-left text-sm">
+                <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-t border-gray-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 font-medium">Item</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-right">Quantity</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-right">Unit Price</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @foreach (var item in Model.LineItems)
+                    {
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-gray-900">@item.ProductName</td>
+                            <td class="px-6 py-4 text-gray-600 text-right">@item.Quantity</td>
+                            <td class="px-6 py-4 text-gray-600 text-right">@item.UnitPrice.ToString("C")</td>
+                            <td class="px-6 py-4 text-gray-800 font-medium text-right">@item.Total.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-end">
+            <div class="w-full max-w-sm space-y-4">
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Subtotal</span>
+                    <span class="font-medium text-gray-800">@Model.Subtotal.ToString("C")</span>
+                </div>
+                <div classs="flex justify-between">
+                    <span class="text-gray-500">Tax (@(Model.TaxRate.ToString("P")))</span>
+                    <span class="font-medium text-gray-800">@Model.Tax.ToString("C")</span>
+                </div>
+                <div class="flex justify-between border-t border-gray-200 pt-4 mt-4">
+                    <span class="font-bold text-gray-900 text-lg">Total Due</span>
+                    <span class="font-bold text-gray-900 text-lg">@Model.Total.ToString("C")</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
